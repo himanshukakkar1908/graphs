@@ -1,7 +1,7 @@
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
-public class graph_template {
+public class dfs_iterative {
 
     static class Edge{
         int src;
@@ -14,10 +14,18 @@ public class graph_template {
         }
     }
 
+    static class Pair{
+        int val;
+        String str;
+        Pair(int val,String str){
+            this.val=val;
+            this.str=str;
+        }
+    }
+
     public static void main(String[] args) {
 
         Scanner scn=new Scanner(System.in);
-
         int vertices=scn.nextInt();
         int edges=scn.nextInt();
 
@@ -38,6 +46,34 @@ public class graph_template {
         }
 
         boolean[] visited=new boolean[vertices];
+
+        int src=scn.nextInt();
+
+        dfs(graph,visited,src);
+
+    }
+
+
+    public static void dfs(ArrayList<Edge>[] graph,boolean[] visited,int src){
+
+        Stack<Pair> st=new Stack<>();
+        st.push(new Pair(src,""+src));
+
+        while (st.size()!=0) {
+
+            Pair p=st.pop();
+
+            if(!visited[p.val]) {
+                System.out.println(p.val+"@"+p.str);
+                visited[p.val] = true;
+                for (Edge e : graph[p.val]) {
+                    if (!visited[e.nbr]) {
+                        st.push(new Pair(e.nbr,p.str+e.nbr));
+                    }
+                }
+            }
+
+        }
 
     }
 

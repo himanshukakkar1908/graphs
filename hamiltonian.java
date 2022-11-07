@@ -1,17 +1,19 @@
 
 /*
 
-1. You are given a graph, a source vertex and a destination vertex. 2. You are required to find and print all paths between source and destination. Print them in lexicographical order. E.g. Check the following paths 012546 01256 032546 03256 The lexicographically smaller path is printed first.
+1. You are given a graph and a src vertex.
+2. You are required to find and print all hamiltonian paths and cycles starting from src. The cycles must end with "*" and paths with a "."
 
+Note -> A hamiltonian path is such which visits all vertices without visiting any twice. A hamiltonian path becomes a cycle if there is an edge between first and last vertex.
+Note -> Print in lexicographically increasing order.
 
 Constraints
 None
 
-Example
 Sample Input
 
 7
-8
+9
 0 1 10
 1 2 10
 2 3 10
@@ -20,17 +22,14 @@ Sample Input
 4 5 10
 5 6 10
 4 6 10
+2 5 10
 0
-6
-
-
 
 Sample Output
-0123456
-012346
-03456
-0346
-
+0123456.
+0123465.
+0125643*
+0346521*
 
  */
 
@@ -39,7 +38,7 @@ Sample Output
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class print_all_paths {
+public class hamiltonian{
     static class Edge{
         int src;
         int nbr;
@@ -74,21 +73,27 @@ public class print_all_paths {
         }
 
         int src=scn.nextInt();
-        int dest=scn.nextInt();
 
         boolean[] visited=new boolean[vertices];
 
-        print_all_paths_func(graph,src,dest,visited,"");
+        print_all_paths_func(graph,src,visited,"",src);
 
     }
 
-    public static void print_all_paths_func(ArrayList<Edge>[] graph,int src,int dest,boolean[] visisted,String psf){
+    public static void print_all_paths_func(ArrayList<Edge>[] graph,int src,boolean[] visisted,String psf,int start){
 
         psf+=src;
         visisted[src]=true;
 
-        if(src==dest){
-            System.out.println(psf);
+        if(psf.length()==graph.length){
+            for(Edge e:graph[src]){
+                if(e.nbr==start){
+                    System.out.println(psf+"*");
+                    visisted[src]=false;
+                    return;
+                }
+            }
+            System.out.println(psf+".");
             visisted[src]=false;
             return;
         }
@@ -96,7 +101,7 @@ public class print_all_paths {
         for(int next_vertex=0;next_vertex<graph.length;next_vertex++){
             for(Edge e:graph[src]){
                 if(e.nbr==next_vertex && !visisted[next_vertex]){
-                    print_all_paths_func(graph,next_vertex,dest,visisted,psf);
+                    print_all_paths_func(graph,next_vertex,visisted,psf,start);
                 }
             }
         }
