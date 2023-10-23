@@ -56,19 +56,19 @@ public class dfs_iterative {
 
     public static void dfs(ArrayList<Edge>[] graph,boolean[] visited,int src){
 
-        Stack<Pair> st=new Stack<>();
-        st.push(new Pair(src,""+src));
+        Stack<Pair> stack=new Stack<>();
+        stack.push(new Pair(src,""+src));
 
-        while (st.size()!=0) {
+        while (!stack.isEmpty()) {
 
-            Pair p=st.pop();
+            Pair current_pair=stack.pop();
 
-            if(!visited[p.val]) {
-                System.out.println(p.val+"@"+p.str);
-                visited[p.val] = true;
-                for (Edge e : graph[p.val]) {
-                    if (!visited[e.nbr]) {
-                        st.push(new Pair(e.nbr,p.str+e.nbr));
+            if(!visited[current_pair.val]) {
+                System.out.println(current_pair.val+"@"+current_pair.str);
+                visited[current_pair.val] = true;
+                for (Edge edge : graph[current_pair.val]) {
+                    if (!visited[edge.nbr]) {
+                        stack.push(new Pair(edge.nbr,current_pair.str+edge.nbr));
                     }
                 }
             }
